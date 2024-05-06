@@ -6,12 +6,14 @@
 #
 #    http://shiny.rstudio.com/
 #
-
-library(shiny)
-library(dplyr)
-library(rlang)
-library(readr)
-library(ggplot2)
+suppressPackageStartupMessages({
+  library(shiny)
+  library(DT)
+  library(dplyr)
+  library(rlang)
+  library(readr)
+  library(ggplot2)
+})
 
 #' Create a pretty set of plotting breaks
 #' @param n number of intervals
@@ -56,7 +58,7 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            selectInput("port",
+            selectizeInput("port",
                         "Port:",
                         choices = DATA$port,
                         selected = 1),
@@ -78,8 +80,8 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           dataTableOutput("table"),
-           plotOutput("plot")
+          DT::DTOutput("table"),
+          plotOutput("plot")
         )
         
     )
