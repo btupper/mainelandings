@@ -40,8 +40,19 @@ most_recent_csv <- function(path = "."){
 #' @return tibble
 read_data <- function(filename = most_recent_csv()){
  readr::read_csv(filename,
-                 col_types = 'nccccncnnn') %>%
-        dplyr::filter(!is.na(species)) %>%
+                 col_types = readr::cols(
+                   year = readr::col_double(),
+                   species = readr::col_character(),
+                   port = readr::col_character(),
+                   county = readr::col_character(),
+                   lob_zone = readr::col_character(),
+                   weight_type = readr::col_character(),
+                   weight = readr::col_double(),
+                   value = readr::col_double(),
+                   trip_n = readr::col_double(),
+                   harv_n = readr::col_double()
+                 )) |>
+        dplyr::filter(!is.na(species)) |>
         dplyr::arrange(port)
 }
 DATA <- read_data()
@@ -90,7 +101,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     output$table <- renderDataTable(
-        DATA %>% 
+        DATA |> 
           dplyr::filter(port == input$port, 
                         if(input$lobster == "no"){
                           !LOBSTER
@@ -101,13 +112,13 @@ server <- function(input, output) {
     )
     output$plot <- renderPlot({
 
-        x <- DATA %>% 
+        x <- DATA |> 
             dplyr::filter(port == input$port, 
                           if(input$lobster == "no"){
                             !LOBSTER
                           } else {
                             ALL
-                          }) %>%
+                          }) |>
             dplyr::mutate(data = switch(input$transform,
                           "per trip" = .data[[!!input$by]]/.data$trip_n,
                           "per harvester" = .data[[!!input$by]]/.data$harv_n,

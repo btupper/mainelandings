@@ -5,7 +5,7 @@ account: btupper
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3913983
-bundleId:
+bundleId: 8584403
 url: https://btupper.shinyapps.io/mainelandings/
 asMultiple: FALSE
 asStatic: FALSE
